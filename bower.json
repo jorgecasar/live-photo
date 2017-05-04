@@ -1,0 +1,35 @@
+{
+  "name": "live-photo",
+  "description": "Live Photo from Apple implemented in Polymer",
+  "main": "live-photo.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0-rc.2"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#2.0-preview",
+    "web-component-tester": "^6.0.0-prerelease.5",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0-rc.5"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0-rc.2"
+  },
+  "homepage": "https://github.com/jorgecasar/live-photo",
+  "authors": [
+    "Jorge del Casar <jorge.casar@gmail.com>"
+  ],
+  "keywords": [
+    "Polymer",
+    "web",
+    "Components",
+    "LivePhoto",
+    "Apple"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

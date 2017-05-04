@@ -1,0 +1,352 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<script src="https://cdn.apple-livephotoskit.com/lpk/1/livephotoskit.js"></script>
+<!--<link rel="import" href="../polymer/lib/elements/dom-if.html">-->
+<!--<link rel="import" href="../polymer/lib/elements/dom-repeat.html">-->
+
+<!--
+`live-photo`
+Live Photo from Apple implemented in Polymer
+
+@demo demo/index.html
+-->
+
+<dom-module id="live-photo">
+  <template>
+    <style>
+      :host(:not(hidden)) {
+        display: block;
+        width: 216px;
+        height: 162px;
+      }
+      div {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </template>
+
+  <script>
+    /** @polymerElement */
+    class LivePhoto extends Polymer.Element {
+      static get is() { return 'live-photo'; }
+      static get properties() {
+        return {
+          player: Object,
+          /**
+           * A boolean value that indicates whether the Player downloads
+           * bytes before the user begins playback.
+           */
+          preload: Boolean,
+          /**
+           * The value of this property indicates whether
+           * the Apple-provided playback controls are not enabled for the user.
+           */
+          noControls: Boolean,
+          /**
+           * Play a short section of the motion content.
+           */
+          hint: Boolean,
+
+          /**
+           * The current time, in seconds, of the play head.
+           */
+          currentTime: Number,
+
+          /**
+           * The duration, in seconds, of the entire Live Photo.
+           */
+          duration: Number,
+
+          /**
+           * The height, in pixels, of the photo component.
+           */
+          photoHeight: Number,
+
+          /**
+           * The width, in pixels, of the photo component.
+           */
+          photoWidth: Number,
+
+          /**
+           * The MIME type of a photo asset.
+           */
+          photoMimeType: String,
+
+          /** The nominated time, in seconds, of where the photo component
+           * should be within the Live Photo video component.
+           */
+          photoTime: Number,
+
+          /**
+           * The source of the photo component of the Live Photo.
+           */
+          photoSrc: String,
+
+          /**
+           * A Boolean value that indicates whether
+           * the Player is able to begin playback.
+           */
+          canPlay: Boolean,
+
+          /**
+           * An array of errors that occurred when attempting to load resources.
+           */
+          errors: Array,
+
+          /**
+           * An array of timestamps for each second from the beginning of
+           * a Live Photo for which the frames reside in the Live Photo.
+           */
+          frameTimes: Array,
+
+          /**
+           * A Boolean value that indicates whether or not
+           * the Player is playing.
+           */
+          isPlaying: Boolean,
+
+          /**
+           * A numeric value that indicates the progress of
+           * loading the Live Photo.
+           */
+          loadProgress: Number,
+
+          /**
+           * A string or array buffer that contains metadata about
+           * the properties of a Live Photo.
+           */
+          metadataVideoSrc: String,
+
+          /**
+           * The current timestamp, as a floating-point number of seconds
+           * from the beginning of the animation,
+           * that is truly displayed on the screen.
+           */
+          renderedTime: Number,
+
+          /**
+           * The playable HTMLVideoElement that the Player consumes to obtain video frame data to render to the screen while animating a Live Photo.
+           */
+          video: Object,
+
+          /**
+           * The height, in pixels, of the underlying video asset provided to the this.player.
+           */
+          videoHeight: Number,
+
+          /**
+           * The MIME type of the video asset.
+           */
+          videoMimeType: String,
+
+          /**
+           * The angle that the video is displayed.
+           */
+          videoRotation: Number,
+
+          /**
+           * A reference to the source of the video component of this Live Photo.
+           */
+          videoSrc: String,
+
+          /**
+           * The width, in pixels, of an underlying video asset provided to the this.player.
+           */
+          videoWidth: Number,
+
+          /**
+           * A boolean that indicates whether the Player has been instructed to play.
+           */
+          wantsToPlay: Boolean,
+
+        };
+      }
+
+      get hint() {
+        return this.player.playbackStyle === LivePhotosKit.PlaybackStyle.HINT;
+      }
+      set hint(hint) {
+        this.player.playbackStyle = hint ?
+          LivePhotosKit.PlaybackStyle.HINT :
+          LivePhotosKit.PlaybackStyle.FULL;
+      }
+
+      get preload() {
+        return this.player.proactivelyLoadsVideo;
+      }
+      set preload(preload) {
+        this.player.proactivelyLoadsVideo = preload;
+      }
+
+      get noControls() {
+        return !this.player.showsNativeControls;
+      }
+      set noControls(noControls) {
+        this.player.showsNativeControls = !noControls;
+      }
+
+      get currentTime() {
+        return this.player.currentTime;
+      }
+      set currentTime(currentTime) {
+        this.player.currentTime = currentTime;
+      }
+
+      get duration() {
+        return this.player.duration;
+      }
+
+      get photoHeight() {
+        return this.player.photoHeight;
+      }
+
+      get photoWidth() {
+        return this.player.photoWidth;
+      }
+
+      get photoTime() {
+        return this.player.photoTime;
+      }
+
+      get canPlay() {
+        return this.player.canPlay;
+      }
+
+      get errors() {
+        return this.player.errors
+      }
+
+      get frameTimes() {
+        return this.player.frameTimes
+      }
+
+      get isPlaying() {
+        return this.player.isPlaying
+      }
+
+      get loadProgress() {
+        return this.player.loadProgress
+      }
+
+      get metadataVideoSrc() {
+        return this.player.metadataVideoSrc
+      }
+
+      get photo() {
+        return this.player.photo
+      }
+
+      get photoMimeType() {
+        return this.player.photoMimeType
+      }
+
+      get photoSrc() {
+        return this.player.photoSrc;
+      }
+      set photoSrc(photoSrc) {
+        this.player.photoSrc = photoSrc;
+      }
+
+      get playbackStyle() {
+        return this.player.playbackStyle
+      }
+
+      get proactivelyLoadsVideo() {
+        return this.player.proactivelyLoadsVideo
+      }
+
+      get renderedTime() {
+        return this.player.renderedTime
+      }
+
+      get showsNativeControls() {
+        return this.player.showsNativeControls
+      }
+
+
+      get video() {
+        return this.player.video;
+      }
+
+      get videoHeight() {
+        return this.player.videoHeight;
+      }
+
+      get videoMimeType() {
+        return this.player.videoMimeType;
+      }
+
+      get videoRotation() {
+        return this.player.videoRotation;
+      }
+
+      get videoSrc() {
+        return this.player.videoSrc;
+      }
+      set videoSrc(videoSrc) {
+        this.player.videoSrc = videoSrc;
+      }
+
+      get videoWidth() {
+        return this.player.videoWidth;
+      }
+
+      get wantsToPlay() {
+        return this.player.wantsToPlay;
+      }
+
+      constructor() {
+        super();
+        this.player = LivePhotosKit.Player();
+      }
+
+      connectedCallback () {
+        super.connectedCallback();
+        this.shadowRoot.appendChild(this.player);
+      }
+
+      /**
+       * Clips the duration of the renderer early so that the animation begins
+       * to fade back to the photo component earlier than it would ordinarily.
+       */
+      beginFinishingPlaybackEarly() {
+        this.player.beginFinishingPlaybackEarly();
+      }
+      /**
+      * Pauses playback at the current time.
+      */
+      pause() {
+        this.player.pause();
+      }
+      /**
+      * Starts playback if the player is ready,
+      * or resumes playback if the player is paused.
+      */
+      play() {
+        this.player.play();
+      }
+      /**
+      * Stops playback and rewinds to the current time of zero.
+      */
+      stop() {
+        this.player.stop();
+      }
+      /**
+      * Starts playing the video component of Live Photo
+      * if the video is paused, or pauses the video if it is playing.
+      */
+      toggle() {
+        this.player.toggle();
+      }
+      /**
+      * Updates the size of the this.player.
+      */
+      updateSize() {
+        this.player.updateSize();
+      }
+    }
+
+    window.customElements.define(LivePhoto.is, LivePhoto);
+  </script>
+</dom-module>

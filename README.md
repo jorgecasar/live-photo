@@ -1,6 +1,23 @@
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/jorgecasar/live-photo)
+
 # \<live-photo\>
 
 Live Photo from Apple implemented in Polymer
+
+<!--
+```
+<custom-element-demo>
+  <template>
+    <link rel="import" href="live-photo.html">
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+<live-photo id="livePhoto" photo-src="demo/assets/boy.jpg" video-src="demo/assets/boy.mov" preload></live-photo>
+<live-photo id="livePhoto" photo-src="demo/assets/girl.jpg" video-src="demo/assets/girl.mov" no-controls></live-photo>
+```
 
 ## Install the Polymer-CLI
 
